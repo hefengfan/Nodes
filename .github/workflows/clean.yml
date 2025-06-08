@@ -3,7 +3,7 @@ name: Cleanup
 on:
   schedule:
     - cron: "0 5 * * *" # Every Sunday at 00:00
-
+  workflow_dispatch:
 jobs:
   clean:
     runs-on: ubuntu-22.04
