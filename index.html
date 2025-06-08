@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>V2rayN Node APIs</title>
+    <title>My V2Ray Resources</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -62,6 +62,23 @@
             background-color: #3e8e41;
         }
 
+        .update-button {
+            background-color: #007bff; /* Blue */
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 10px; /* Add some spacing below the button */
+        }
+        .update-button:hover {
+            background-color: #0056b3;
+        }
+
         /* Styles for the floating notification */
         #notification {
             position: fixed;
@@ -93,8 +110,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>V2rayN Node APIs</h1>
-        <p>Below are the contents of the V2rayN API files:</p>
+        <h1>My V2Ray Resources</h1>
+        <p>All collections by hefengfan.</p>
+
+        <button class="update-button" onclick="updateAllFiles()">Update All Files</button>
 
         <div id="clashmeta" class="node-content">
             <div class="node-title">clashmeta.txt</div>
@@ -144,7 +163,7 @@
     <script>
         async function loadFileContent(filename, elementId) {
             try {
-                const response = await fetch('nodes/' + filename);
+                const response = await fetch('nodes/' + filename + '?_=' + new Date().getTime()); // Add cache-busting
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -180,13 +199,19 @@
             }, 3000);
         }
 
-        loadFileContent('clashmeta.txt', 'clashmeta-content');
-        loadFileContent('ndnode.txt', 'ndnode-content');
-        loadFileContent('nodefree.txt', 'nodefree-content');
-        loadFileContent('nodev2ray.txt', 'nodev2ray-content');
-        loadFileContent('v2rayshare.txt', 'v2rayshare-content');
-        loadFileContent('wenode.txt', 'wenode-content');
-        loadFileContent('yudou66.txt', 'yudou66-content');
+        function updateAllFiles() {
+            loadFileContent('clashmeta.txt', 'clashmeta-content');
+            loadFileContent('ndnode.txt', 'ndnode-content');
+            loadFileContent('nodefree.txt', 'nodefree-content');
+            loadFileContent('nodev2ray.txt', 'nodev2ray-content');
+            loadFileContent('v2rayshare.txt', 'v2rayshare-content');
+            loadFileContent('wenode.txt', 'wenode-content');
+            loadFileContent('yudou66.txt', 'yudou66-content');
+            showNotification('All files updated!', 'success');
+        }
+
+        // Load files on initial page load
+        updateAllFiles();
     </script>
 </body>
 </html>
