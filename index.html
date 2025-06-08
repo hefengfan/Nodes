@@ -29,6 +29,7 @@
             border-radius: 5px;
             background-color: #f9f9f9;
             overflow-x: auto; /* Handle potentially wide content */
+            position: relative; /* For positioning the copy button */
         }
         .node-title {
             font-weight: bold;
@@ -42,6 +43,52 @@
         a:hover {
             text-decoration: underline;
         }
+        .copy-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .copy-button:hover {
+            background-color: #3e8e41;
+        }
+
+        /* Styles for the floating notification */
+        #notification {
+            position: fixed;
+            bottom: 50px; /* Increased bottom value to move it up */
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%); /* Adjust for the element's width */
+            width: auto; /* Adjust as needed */
+            min-width: 300px; /* Set a minimum width */
+            max-width: 90%; /* Prevent overflowing on small screens */
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 10px 20px; /* Add horizontal padding */
+            border-radius: 5px; /* Rounded corners */
+            display: none; /* Hidden by default */
+            z-index: 1000; /* Ensure it's on top of other elements */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+        }
+
+        #notification.success {
+            background-color: rgba(173, 216, 230, 0.8); /* Light Blue */
+            color: #333; /* Dark text for better contrast */
+        }
+
+        #notification.error {
+            background-color: rgba(240, 128, 128, 0.8); /* Light Red */
+        }
     </style>
 </head>
 <body>
@@ -51,39 +98,48 @@
 
         <div id="clashmeta" class="node-content">
             <div class="node-title">clashmeta.txt</div>
+            <button class="copy-button" onclick="copyToClipboard('clashmeta-content', 'clashmeta.txt')">Copy</button>
             <pre id="clashmeta-content"></pre>
         </div>
 
         <div id="ndnode" class="node-content">
             <div class="node-title">ndnode.txt</div>
+            <button class="copy-button" onclick="copyToClipboard('ndnode-content', 'ndnode.txt')">Copy</button>
             <pre id="ndnode-content"></pre>
         </div>
 
         <div id="nodefree" class="node-content">
             <div class="node-title">nodefree.txt</div>
+            <button class="copy-button" onclick="copyToClipboard('nodefree-content', 'nodefree.txt')">Copy</button>
             <pre id="nodefree-content"></pre>
         </div>
 
         <div id="nodev2ray" class="node-content">
             <div class="node-title">nodev2ray.txt</div>
+            <button class="copy-button" onclick="copyToClipboard('nodev2ray-content', 'nodev2ray.txt')">Copy</button>
             <pre id="nodev2ray-content"></pre>
         </div>
 
         <div id="v2rayshare" class="node-content">
             <div class="node-title">v2rayshare.txt</div>
+            <button class="copy-button" onclick="copyToClipboard('v2rayshare-content', 'v2rayshare.txt')">Copy</button>
             <pre id="v2rayshare-content"></pre>
         </div>
 
         <div id="wenode" class="node-content">
             <div class="node-title">wenode.txt</div>
+            <button class="copy-button" onclick="copyToClipboard('wenode-content', 'wenode.txt')">Copy</button>
             <pre id="wenode-content"></pre>
         </div>
 
         <div id="yudou66" class="node-content">
             <div class="node-title">yudou66.txt</div>
+            <button class="copy-button" onclick="copyToClipboard('yudou66-content', 'yudou66.txt')">Copy</button>
             <pre id="yudou66-content"></pre>
         </div>
     </div>
+
+    <div id="notification"></div>
 
     <script>
         async function loadFileContent(filename, elementId) {
@@ -98,6 +154,30 @@
                 document.getElementById(elementId).textContent = 'Error loading file: ' + error;
                 console.error('Error loading file:', error);
             }
+        }
+
+        function copyToClipboard(elementId, filename) {
+            const textToCopy = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    showNotification(`Content of ${filename} copied to clipboard!`, 'success');
+                })
+                .catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    showNotification(`Failed to copy content of ${filename} to clipboard.  Please try manually.`, 'error');
+                });
+        }
+
+        function showNotification(message, type = 'success') {
+            const notificationElement = document.getElementById('notification');
+            notificationElement.textContent = message;
+            notificationElement.className = 'notification ' + type; // Add the class
+            notificationElement.style.display = 'block';
+
+            // Hide the notification after a few seconds (e.g., 3 seconds)
+            setTimeout(() => {
+                notificationElement.style.display = 'none';
+            }, 3000);
         }
 
         loadFileContent('clashmeta.txt', 'clashmeta-content');
