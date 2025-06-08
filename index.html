@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>V2rayN Node APIs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f2f7; /* Light blue background */
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #007bff; /* Example: Bootstrap primary color */
+            text-align: center;
+        }
+        .node-content {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            overflow-x: auto; /* Handle potentially wide content */
+        }
+        .node-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>V2rayN Node APIs</h1>
+        <p>Below are the contents of the V2rayN API files:</p>
+
+        <div id="clashmeta" class="node-content">
+            <div class="node-title">clashmeta.txt</div>
+            <pre id="clashmeta-content"></pre>
+        </div>
+
+        <div id="ndnode" class="node-content">
+            <div class="node-title">ndnode.txt</div>
+            <pre id="ndnode-content"></pre>
+        </div>
+
+        <div id="nodefree" class="node-content">
+            <div class="node-title">nodefree.txt</div>
+            <pre id="nodefree-content"></pre>
+        </div>
+
+        <div id="nodev2ray" class="node-content">
+            <div class="node-title">nodev2ray.txt</div>
+            <pre id="nodev2ray-content"></pre>
+        </div>
+
+        <div id="v2rayshare" class="node-content">
+            <div class="node-title">v2rayshare.txt</div>
+            <pre id="v2rayshare-content"></pre>
+        </div>
+
+        <div id="wenode" class="node-content">
+            <div class="node-title">wenode.txt</div>
+            <pre id="wenode-content"></pre>
+        </div>
+
+        <div id="yudou66" class="node-content">
+            <div class="node-title">yudou66.txt</div>
+            <pre id="yudou66-content"></pre>
+        </div>
+    </div>
+
+    <script>
+        async function loadFileContent(filename, elementId) {
+            try {
+                const response = await fetch('nodes/' + filename);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const text = await response.text();
+                document.getElementById(elementId).textContent = text;
+            } catch (error) {
+                document.getElementById(elementId).textContent = 'Error loading file: ' + error;
+                console.error('Error loading file:', error);
+            }
+        }
+
+        loadFileContent('clashmeta.txt', 'clashmeta-content');
+        loadFileContent('ndnode.txt', 'ndnode-content');
+        loadFileContent('nodefree.txt', 'nodefree-content');
+        loadFileContent('nodev2ray.txt', 'nodev2ray-content');
+        loadFileContent('v2rayshare.txt', 'v2rayshare-content');
+        loadFileContent('wenode.txt', 'wenode-content');
+        loadFileContent('yudou66.txt', 'yudou66-content');
+    </script>
+</body>
+</html>
