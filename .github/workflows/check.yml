@@ -1,6 +1,8 @@
 name: Check Pushes
 
 on:
+  schedule:
+    - cron: "0 6,14,22 * * *"
   workflow_dispatch:
   pull_request:
     branches:
