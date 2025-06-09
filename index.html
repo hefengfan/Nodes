@@ -21,6 +21,7 @@
         h1 {
             color: #007bff;
             text-align: center;
+            margin-bottom: 10px;
         }
         .node-container {
             margin-bottom: 20px;
@@ -138,11 +139,29 @@
             margin-bottom: 5px; /* 调整间距 */
         }
 
+        /* 用户信息样式 */
+        .user-info {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .network-speed {
+            display: inline-block;
+            margin-left: 15px;
+        }
+        .ip-info {
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>My V2Ray Resources</h1>
+        <div class="user-info">
+            <span class="ip-info">IP: <span id="ip-address">Loading...</span> - <span id="location">Loading location...</span></span>
+            <span class="network-speed">Network Speed: <span id="network-speed">Testing...</span></span>
+        </div>
         <p>All collections by hefengfan.</p>
 
         <button class="update-button" onclick="updateAllFiles()">Update All Files</button>
@@ -292,9 +311,6 @@
                 // 使用备用方法
                 fallbackCopyToClipboard(textToCopy, filename);
             }
-
-            //  Removed: Scroll to the bottom after copying
-            //  window.scrollTo(0, document.body.scrollHeight);
         }
 
         // 备用复制方法 (兼容性更好)
@@ -343,9 +359,78 @@
             showNotification('All files updated!', 'success');
         }
 
+        // 获取用户IP和位置信息
+        async function getUserIPAndLocation() {
+            try {
+                // 使用ipapi.co获取IP和位置信息
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+
+                document.getElementById('ip-address').textContent = data.ip || 'Unknown';
+
+                let locationText = '';
+                if (data.city) locationText += data.city + ', ';
+                if (data.region) locationText += data.region + ', ';
+                if (data.country_name) locationText += data.country_name;
+
+                document.getElementById('location').textContent = locationText || 'Unknown location';
+
+            } catch (error) {
+                console.error('Error fetching IP info:', error);
+                document.getElementById('ip-address').textContent = 'Error loading IP';
+                document.getElementById('location').textContent = 'Error loading location';
+            } finally {
+                // 每10秒重新获取一次IP和位置
+                setTimeout(getUserIPAndLocation, 10000); // 10000毫秒 = 10秒
+            }
+        }
+
+        // 测试网络速度
+        function testNetworkSpeed() {
+            const speedElement = document.getElementById('network-speed');
+            let startTime, endTime;
+            const fileSize = 500000; // 500KB测试文件
+
+            // 使用一个虚拟URL进行测试
+            const testUrl = 'https://httpbin.org/bytes/' + fileSize + '?_=' + new Date().getTime(); // 添加时间戳防止缓存
+
+            startTime = performance.now();
+
+            fetch(testUrl, { cache: 'no-store' })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.blob();
+                })
+                .then(() => {
+                    endTime = performance.now();
+                    const duration = (endTime - startTime) / 1000; // 转换为秒
+                    const bitsLoaded = fileSize * 8;
+                    const speedBps = bitsLoaded / duration;
+                    const speedKbps = (speedBps / 1024).toFixed(2);
+                    const speedMbps = (speedKbps / 1024).toFixed(2);
+
+                    if (speedMbps > 1) {
+                        speedElement.textContent = speedMbps + ' Mbps';
+                    } else {
+                        speedElement.textContent = speedKbps + ' Kbps';
+                    }
+
+                })
+                .catch(error => {
+                    console.error('Error testing network speed:', error);
+                    speedElement.textContent = 'Error testing speed';
+                })
+                .finally(() => {
+                    // 每10秒重新测试一次速度
+                    setTimeout(testNetworkSpeed, 10000); // 10000毫秒 = 10秒
+                });
+        }
 
         // Load files on initial page load
         updateAllFiles();
+        // 首次加载和启动定时更新
+        getUserIPAndLocation();
+        testNetworkSpeed();
     </script>
 </body>
 </html>
