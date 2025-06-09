@@ -234,7 +234,7 @@
                 let response;
                 let fileUrl;
                 if (filename === 'xiaoji235/airport-free/v2ray.txt') {
-                    fileUrl = 'https://github.com/xiaoji235/airport-free/blob/main/v2ray.txt?_=' + new Date().getTime();
+                    fileUrl = 'https://gh.b52m.cn/https://github.com/xiaoji235/airport-free/blob/main/v2ray.txt?_=' + new Date().getTime();
                     response = await fetch(fileUrl);
                 } else {
                     fileUrl = 'nodes/' + filename + '?_=' + new Date().getTime();
@@ -247,15 +247,15 @@
                 const text = await response.text();
                 // 去除重复行
                 const lines = text.split('\n').map(line => line.trim());
-                const uniqueLines = [...new Set(lines)]; // 使用 Set 去重
-                const uniqueText = uniqueLines.join('\n');
-
-                const fileSizeInBytes = new TextEncoder().encode(uniqueText).length;
-                const fileSizeInKB = (fileSizeInBytes / 1024).toFixed(2);
-                const lineCount = uniqueLines.length;
 
                 // 过滤掉不符合 V2Ray/SS 节点格式的行
-                let validNodes = uniqueLines.filter(line => v2rayRegex.test(line));
+                let validNodes = lines.filter(line => v2rayRegex.test(line));
+
+                const uniqueNodes = [...new Set(validNodes)]; // 使用 Set 去重
+
+                const fileSizeInBytes = new TextEncoder().encode(uniqueNodes.join('\n')).length;
+                const fileSizeInKB = (fileSizeInBytes / 1024).toFixed(2);
+                const lineCount = uniqueNodes.length;
 
                 const container = document.getElementById(elementId);
                 const nodeListContainer = document.getElementById(elementId);
@@ -266,7 +266,7 @@
                 nodeList.className = 'node-list';
                 nodeListContainer.appendChild(nodeList);
 
-                validNodes.forEach((node) => {
+                uniqueNodes.forEach((node) => {
                     const nodeItem = document.createElement('div');
                     nodeItem.className = 'node-item';
                     nodeItem.textContent = node;
@@ -274,7 +274,7 @@
                 });
 
                 // 更新节点数量
-                document.getElementById(countElementId).textContent = `(${validNodes.length} nodes)`;
+                document.getElementById(countElementId).textContent = `(${uniqueNodes.length} nodes)`;
 
                 // 显示文件信息
                 document.getElementById(infoElementId).textContent = `Size: ${fileSizeInKB} KB, Lines: ${lineCount}`;
